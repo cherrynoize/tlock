@@ -117,10 +117,14 @@ In order to build tlock you need the Xlib header files.
 Potential runtime deps (depending on options set and
 configuration): sudo, ffmpeg, setxkbmap, sox.
 
-## Installation
+## Install
 
-You can edit the `config.mk` file before you compile the
-package to suit it to your needs. By default it will be
+First you need to clone this repo into a local directory:
+
+    git clone https://github.com/cherrynoize/tlock
+
+You can then edit the `config.mk` before you compile the
+package to best suit your needs. By default it will be
 installed as `/usr/local/bin/tlock`, so you need to edit
 the make configuration if you want to write the output
 file to a different location.
