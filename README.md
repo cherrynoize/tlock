@@ -34,7 +34,7 @@ screen. In the config, just set TRANSPARENCY to 1.
 To hide the cursor instead just set the HIDE_CURSOR
 flag to 1.
 
-## Password
+### Password
 
 You can choose to add a custom password by simply
 creating a file and storing it in there.
@@ -50,7 +50,7 @@ are the default values, so you only need to uncomment
 the flags if they are commented, but otherwise you can
 point them to any location of your choosing.
 
-## Alarm
+### Alarm
 
 You can play a sound alarm on an incorrect password
 attempt. By default the program uses `play`, which can be
@@ -58,7 +58,7 @@ found in the `sox` package, but you can set the custom
 sound file flag to play any audio file on your computer
 instead.
 
-## Shutdown
+### Shutdown
 
 You can set an automatic shutdown after too many tries,
 or if a CTRL+ALT+F1-13 or ALT+SYSRQ key sequence is 
@@ -100,13 +100,13 @@ internally. This requires another sudoers option:
 However, this is not recommended as now any process can 
 modify the `oom_score` for any other process.
 
-## Preventing USB tampering
+### Preventing USB tampering
 
 [GRSecurity support for Arch was dropped](https://lists.archlinux.org/pipermail/arch-general/2017-April/043604.html)
 so we removed the feature and currently have no option to
 deal with this.
 
-## Webcam snapshot
+### Webcam snapshot
 
 You can enable the option to take a webcam shot of
 whoever is tampering with your machine before shutdown.
@@ -144,7 +144,7 @@ When you're satisfied with your configuration:
 Then either enter your password or your tlock password,
 if you have any. Et voilà.
 
-## Auto-enable after suspend
+### Auto-enable after suspend
 
 Create a new `resume@.service` file in
 `/etc/systemd/system` or edit with care it if you
