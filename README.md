@@ -47,10 +47,6 @@ values, so you only need to uncomment them if they are
 commented, but otherwise you can point them to any
 location of your choosing.
 
-> *Warning: currently experimental. May not find your
-> password file and default to your login password as
-> normal.*
-
 ## Alarm
 
 You can play a sound alarm on each incorrect password
