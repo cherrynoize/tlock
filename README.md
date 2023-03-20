@@ -16,10 +16,10 @@ All configuration is done in the `config.h` file.
 
 ### Colors
 
-Colors are fully customizable from config file.
+Colors are fully customizable from the config file.
 
 You can choose colors for the initial lock screen, as
-well as the screen when typing, after a bad password
+well as for the screen while typing, after a bad password
 attempt and for the cursor color.
 
 ### Transparency
@@ -36,7 +36,7 @@ flag to 1.
 
 ## Password
 
-You can choose to utilize a custom password by simply
+You can choose to add a custom password by simply
 creating a file and storing it in there.
 
     mkdir ~/.config/tlock
@@ -45,14 +45,14 @@ creating a file and storing it in there.
     chmod 600 passwd
 
 You also have to set the CONFIG_DIR and PASSWD macros
-so they point to the correct file. These are the default
-values, so you only need to uncomment them if they are
-commented, but otherwise you can point them to any
-location of your choosing.
+so they point to the correct file. These shown here
+are the default values, so you only need to uncomment
+the flags if they are commented, but otherwise you can
+point them to any location of your choosing.
 
 ## Alarm
 
-You can play a sound alarm on each incorrect password
+You can play a sound alarm on an incorrect password
 attempt. By default the program uses `play`, which can be
 found in the `sox` package, but you can set the custom
 sound file flag to play any audio file on your computer
@@ -102,7 +102,7 @@ modify the `oom_score` for any other process.
 
 ## Preventing USB tampering
 
-[GRSecurity support was dropped](https://lists.archlinux.org/pipermail/arch-general/2017-April/043604.html)
+[GRSecurity support for Arch was dropped](https://lists.archlinux.org/pipermail/arch-general/2017-April/043604.html)
 so we removed the feature and currently have no option to
 deal with this.
 
@@ -110,6 +110,7 @@ deal with this.
 
 You can enable the option to take a webcam shot of
 whoever is tampering with your machine before shutdown.
+A nice little goody inherited from chjj's fork. 
 
 *Requires ffmpeg.*
 
@@ -122,12 +123,12 @@ configuration): sudo, ffmpeg, setxkbmap, sox.
 
 ## Install
 
-First you need to clone this repo into a local directory:
+First you need to clone this repo on your machine:
 
     git clone https://github.com/cherrynoize/tlock
 
-You can then edit the `config.mk` before you compile the
-package to best suit your needs. By default it will be
+You can then edit the `config.mk` file before you compile
+the package to best suit your needs. By default it will be
 installed as `/usr/local/bin/tlock`, so you need to edit
 the make configuration if you want to write the output
 file to a different location.
@@ -170,8 +171,29 @@ Then enable or start the service for your user like this:
 
 Where USER is your username.
 
-Verify it is working properly with:
+Verify it is working as expected with:
 
     systemctl status resume\@USER.service
+
+## Contacts
+
+> u/cherrynoize
+> 
+> 0xo1m0x5w@mozmail.com
+
+Please feel free to contact me about any feedback or
+request.
+
+## Donations
+
+If you wanted to show your support or just buy me a Coke:
+
+    ETH   0x5938C4DA9002F1b3a54fC63aa9E4FB4892DC5aA8
+
+    SOL   G77bErQLYatQgMEXHYUqNCxFdUgKuBd8xsAuHjeqvavv
+
+    BNB   0x0E0eAd7414cFF412f89BcD8a1a2043518fE58f82
+
+    LUNC  terra1n5sm6twsc26kjyxz7f6t53c9pdaz7eu6zlsdcy
 
 #### Thank you for using tlock.
