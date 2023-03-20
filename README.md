@@ -1,11 +1,11 @@
 # tlock | tightened simple screen locker
 
-This is a fork of [a fork of *slock*]
-(https://github.com/chjj/slock) from which we take
-inspiration for some sound security options but actually
-take it back towards a more simplicistic approach like
-the original *slock*'s but with some added configuration
-capability.
+This is a fork of
+[a fork of *slock*](https://github.com/chjj/slock)
+from which we take inspiration for some sound security 
+options but actually take it back towards a more 
+simplicistic approach like the original *slock*'s but 
+with some added configuration capability.
 
 ## Configuration
 
