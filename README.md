@@ -175,6 +175,8 @@ Verify it is working as expected with:
 
     systemctl status resume\@USER.service
 
+---
+
 ## Contacts
 
 > u/cherrynoize
