@@ -1,15 +1,15 @@
-# slock - simple screen locker
+# ${NAME} - tightened screen locker
 # See LICENSE file for copyright and license details.
 
 include config.mk
 
-SRC = slock.c
+SRC = ${NAME}.c
 OBJ = ${SRC:.c=.o}
 
-all: options slock
+all: options ${NAME}
 
 options:
-	@echo slock build options:
+	@echo ${NAME} build options:
 	@echo "CFLAGS   = ${CFLAGS}"
 	@echo "LDFLAGS  = ${LDFLAGS}"
 	@echo "CC       = ${CC}"
@@ -20,31 +20,31 @@ options:
 
 ${OBJ}: config.mk
 
-slock: ${OBJ}
+${NAME}: ${OBJ}
 	@echo CC -o $@
 	@${CC} -o $@ ${OBJ} ${LDFLAGS}
 
 clean:
 	@echo cleaning
-	@rm -f slock ${OBJ} slock-${VERSION}.tar.gz
+	@rm -f ${NAME} ${OBJ} ${NAME}-${VERSION}.tar.gz
 
 dist: clean
 	@echo creating dist tarball
-	@mkdir -p slock-${VERSION}
-	@cp -R LICENSE Makefile README config.mk ${SRC} slock-${VERSION}
-	@tar -cf slock-${VERSION}.tar slock-${VERSION}
-	@gzip slock-${VERSION}.tar
-	@rm -rf slock-${VERSION}
+	@mkdir -p ${NAME}-${VERSION}
+	@cp -R LICENSE Makefile README config.mk ${SRC} ${NAME}-${VERSION}
+	@tar -cf ${NAME}-${VERSION}.tar ${NAME}-${VERSION}
+	@gzip ${NAME}-${VERSION}.tar
+	@rm -rf ${NAME}-${VERSION}
 
 install: all
-	@echo installing executable file to ${DESTDIR}${PREFIX}/bin
-	@mkdir -p ${DESTDIR}${PREFIX}/bin
-	@cp -f slock ${DESTDIR}${PREFIX}/bin
-	@chmod 755 ${DESTDIR}${PREFIX}/bin/slock
-	@chmod u+s ${DESTDIR}${PREFIX}/bin/slock
+	@echo installing executable file to ${DESTDIR}${PREFIX}${BINDIR}
+	@mkdir -p ${DESTDIR}${PREFIX}${BINDIR}
+	@cp -f ${NAME} ${DESTDIR}${PREFIX}${BINDIR}
+	@chmod 755 ${DESTDIR}${PREFIX}${BINDIR}/${NAME}
+	@chmod u+s ${DESTDIR}${PREFIX}${BINDIR}/${NAME}
 
 uninstall:
-	@echo removing executable file from ${DESTDIR}${PREFIX}/bin
-	@rm -f ${DESTDIR}${PREFIX}/bin/slock
+	@echo removing executable file from ${DESTDIR}${PREFIX}${BINDIR}
+	@rm -f ${DESTDIR}${PREFIX}${BINDIR}/${NAME}
 
 .PHONY: all options clean dist install uninstall
