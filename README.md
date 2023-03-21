@@ -7,8 +7,12 @@ options but actually take it back towards a more
 simplicistic approach like the original *slock*'s but 
 with some added configuration capability.
 
+#### Transparency
 ![tlock screenshot](https://i.imgur.com/UCSM7VE.png "tlock with transparency option")
 ![tlock screenshot](https://i.imgur.com/o7CCIgq.png "tlock with transparency option")
+#### No transparency
+![tlock screenshot](https://imgur.com/E8uLMrO "tlock with no transparency")
+![tlock screenshot](https://imgur.com/kuvWYrH "tlock with no transparency")
 
 ## Configuration
 
