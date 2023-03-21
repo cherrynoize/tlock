@@ -18,8 +18,8 @@ with some added configuration capability.
 
 All configuration is done in the `config.h` file.
 
-To get started make a copy of `config.h.def` into
-`config.h` which you can then edit before compiling.
+To get started just make a copy of `config.h.def` into
+`config.h`, which you can then edit before compiling.
 
     cd tlock
     cp config.h.def config.h
