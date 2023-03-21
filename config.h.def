@@ -1,3 +1,6 @@
+// Don't print to terminal.
+//#define QUIET_MODE 1
+
 // Shutdown after too many tries.
 // Needs sudo privileges - add to /etc/sudoers:
 // [username] [hostname] =NOPASSWD: /usr/bin/tee /proc/sys/kernel/SYSRQ

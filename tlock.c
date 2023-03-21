@@ -689,7 +689,7 @@ int main(int argc, char **argv) {
   Display *dpy;
   int screen;
 
-#ifdef tlock_QUIET
+#ifdef QUIET_MODE
   freopen("/dev/null", "a", stdout);
   freopen("/dev/null", "a", stderr);
 #endif
