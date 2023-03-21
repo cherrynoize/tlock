@@ -3,9 +3,9 @@
 This is a fork of
 [a fork of *slock*](https://github.com/chjj/slock)
 from which we take inspiration for some sound security 
-options but actually take it back towards a more 
-simplicistic approach like the original *slock*'s but 
-with some added configuration capability.
+options but then actually take it back towards a more 
+simplicistic approach (more like original *slock*'s) but 
+with some added configuration capabilities.
 
 #### Transparency
 ![tlock screenshot](https://i.imgur.com/UCSM7VE.png "tlock with transparency option")
