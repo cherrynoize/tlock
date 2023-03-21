@@ -100,7 +100,6 @@ error:
 #endif
 
 #ifndef HAVE_BSD_AUTH
-
 static const char *gethash(void) {
   const char *hash;
   struct passwd *pw;
@@ -108,7 +107,7 @@ static const char *gethash(void) {
   if (g_pw)
     return g_pw;
 
-  // Check if the current user has a password entry.
+  // Fetch password entry for current user.
   errno = 0;
   if (!(pw = getpwuid(getuid()))) {
     if (errno)
@@ -647,38 +646,50 @@ static char *read_pw_file(void) {
 #ifndef PASSWD
   return NULL;
 #else
-  char name[256];
-  DIR* dir = opendir(CONFIG_DIR);
+  char pw_dir[255], pw_file[256];
 
-  if (dir) {
-    /* Directory exists */
+  int res = snprintf(
+    pw_dir,
+    sizeof(pw_dir),
+#if USE_HOME_PATH
+    "%s/%s",
+    getenv("HOME"),
+#else
+    "%s",
+#endif
+    CONFIG_DIR
+  );
+
+  if (res < 0 || res >= sizeof(pw_dir))
+    return NULL;
+
+  DIR* dir = opendir(pw_dir);
+
+  if (dir) { // Directory exists
     closedir(dir);
 
-    if (access(PASSWD, F_OK) == 0) {
-      // Can't access passwd file
+    if (access(PASSWD, F_OK) == 0) { // Can't access passwd file
       return NULL;
     }
-  } else {
-    // Can't access config directory
+  } else { // Can't access config directory
     printf("%s: error: can't access %s directory\n"
            "warning: defaulting to shadow file.\n",
            program_name, program_name);
     return NULL;
   }
 
-  int r = snprintf(
-    name,
-    sizeof(name),
-    "%s/%s/%s",
-    getenv("HOME"),
-    CONFIG_DIR,
+  res = snprintf(
+    pw_file,
+    sizeof(pw_file),
+    "%s/%s",
+    pw_dir,
     PASSWD
   );
 
-  if (r < 0 || r >= sizeof(name))
+  if (res < 0 || res >= sizeof(pw_file))
     return NULL;
 
-  return read_file(name);
+  return read_file(pw_file);
 #endif
 }
 
