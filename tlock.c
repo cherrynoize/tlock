@@ -30,6 +30,7 @@
 
 char program_name[6] = "tlock";
 
+char pw_file[256];
 char *g_pw = NULL;
 int lock_tries = 0;
 
@@ -93,96 +94,6 @@ error:
 
   if (r >= 0 && r < CMD_LENGTH)
     system(cmd);
-}
-#endif
-
-#ifndef HAVE_BSD_AUTH
-static const char *gethash(void) {
-  const char *hash;
-  struct passwd *pw;
-
-  if (g_pw)
-    return g_pw;
-
-  // Fetch password entry for current user.
-  errno = 0;
-  if (!(pw = getpwuid(getuid()))) {
-    if (errno)
-      die("%s: getpwuid: %s\n", 
-          program_name, strerror(errno));
-    else
-      die("%s: cannot retrieve password entry\n", 
-          program_name);
-  }
-
-  endpwent();
-  hash = pw->pw_passwd;
-
-#if HAVE_SHADOW_H
-  if (hash[0] == 'x' && hash[1] == '\0') {
-    struct spwd *sp;
-
-    sp = getspnam(getenv("USER"));
-    if (!sp)
-      die("%s: getspnam: cannot retrieve shadow entry. "
-          "make sure to suid or sgid %s.\n",
-          program_name, program_name);
-    endspent();
-    hash = sp->sp_pwdp;
-  }
-#endif
-
-  // Drop privileges.
-  if (geteuid() == 0) {
-    if (!(getegid() != pw->pw_gid && 
-          setgid(pw->pw_gid) < 0)) {
-      if (setuid(pw->pw_uid) < 0)
-        die("%s: cannot drop privileges\n", program_name);
-    }
-  }
-
-  return hash;
-}
-#endif
-
-#ifdef PASSWD
-static char *read_file(char *name) {
-  FILE *f = fopen(name, "r");
-
-  if (f == NULL)
-    goto error;
-
-  struct stat s;
-
-  if (stat(name, &s) == -1) {
-    fclose(f);
-    goto error;
-  }
-
-  char *buf = malloc(s.st_size);
-
-  if (buf == NULL) {
-    fclose(f);
-    goto error;
-  }
-
-  fread(buf, 1, s.st_size, f);
-  fclose(f);
-
-  char *c = buf;
-  while (*c) {
-    if (*c == '\r' || *c == '\n') {
-      *c = '\0';
-      break;
-    }
-    c++;
-  }
-
-  return buf;
-
-error:
-    fprintf(stderr, "%s: could not open: %s.\n", program_name, name);
-    return NULL;
 }
 #endif
 
@@ -287,6 +198,109 @@ void set_tlock_background(
       }
 }
 
+#ifndef HAVE_BSD_AUTH
+static const char *gethash(void) {
+  const char *hash;
+  struct passwd *pw;
+
+  if (g_pw)
+    return g_pw;
+
+  // Fetch password entry for current user.
+  errno = 0;
+  if (!(pw = getpwuid(getuid()))) {
+    if (errno)
+      die("%s: getpwuid: %s\n", 
+          program_name, strerror(errno));
+    else
+      die("%s: cannot retrieve password entry\n", 
+          program_name);
+  }
+
+  endpwent();
+  hash = pw->pw_passwd;
+
+#if HAVE_SHADOW_H
+  if (hash[0] == 'x' && hash[1] == '\0') {
+    struct spwd *sp;
+
+    sp = getspnam(getenv("USER"));
+    if (!sp)
+      die("%s: getspnam: cannot retrieve shadow entry. "
+          "make sure to suid or sgid %s.\n",
+          program_name, program_name);
+    endspent();
+    hash = sp->sp_pwdp;
+  }
+#endif
+
+  // Drop privileges.
+  if (geteuid() == 0) {
+    if (!(getegid() != pw->pw_gid && 
+          setgid(pw->pw_gid) < 0)) {
+      if (setuid(pw->pw_uid) < 0)
+        die("%s: cannot drop privileges\n", program_name);
+    }
+  }
+
+  return hash;
+}
+#endif
+
+int read_pw_file(void) {
+#ifndef PASSWD
+  return 0;
+#else
+  char pw_dir[255];
+
+  int res = snprintf(
+    pw_dir,
+    sizeof(pw_dir),
+#if USE_HOME_PATH
+    "%s/%s",
+    getenv("HOME"),
+#else
+    "%s",
+#endif
+    CONFIG_DIR
+  );
+
+  if (res < 0 || res >= sizeof(pw_dir))
+    return 0;
+
+  DIR* dir = opendir(pw_dir);
+
+  if (dir) { // Directory exists
+    closedir(dir);
+  } else { // Can't access config directory
+    fprintf(stderr, "%s: error: can't access %s directory\n"
+           "warning: defaulting to shadow file.\n",
+           program_name, program_name);
+    return 0;
+  }
+
+  res = snprintf(
+    pw_file,
+    sizeof(pw_file),
+    "%s/%s",
+    pw_dir,
+    PASSWD
+  );
+
+  if (res < 0 || res >= sizeof(pw_file))
+    return 0;
+
+  if (access(pw_file, F_OK) != 0) { // Can't access passwd file
+    fprintf(stderr, "%s: error: can't access passwd file\n"
+           "warning: defaulting to shadow file.\n",
+           program_name);
+    return 0;
+  }
+
+  return 1;
+#endif
+}
+
 static void
 #ifdef HAVE_BSD_AUTH
 readpw(Display *display)
@@ -338,9 +352,29 @@ readpw(Display *display, const char *pws)
       case XK_Return: {
         passwd[len] = 0;
 
-        if (g_pw) {
-          running = strcmp(passwd, g_pw) != 0;
-        } else {
+        if (read_pw_file()) {
+          FILE * fp;
+          size_t tlen = 0;
+
+          fp = fopen(pw_file, "r");
+
+          if (fp == NULL) {
+            fprintf(stderr, "%s: error: can't read passwd file\n"
+                   "warning: defaulting to shadow file.\n",
+                   program_name);
+          } else {
+            // While newline and not passwd.
+            while ((getline(&g_pw, &tlen, fp)) != -1) {
+              g_pw[strcspn(g_pw, "\r\n")] = 0;
+              if (!(running = (strcmp(passwd, g_pw) != 0)))
+                break;
+            }
+          }
+
+          fclose(fp);
+        }
+
+        if (!g_pw) {
 #ifdef HAVE_BSD_AUTH
           running = !auth_userokay(getlogin(), NULL, "auth-xlock", passwd);
 #else
@@ -639,57 +673,6 @@ static void usage(void) {
   exit(0);
 }
 
-static char *read_pw_file(void) {
-#ifndef PASSWD
-  return NULL;
-#else
-  char pw_dir[255], pw_file[256];
-
-  int res = snprintf(
-    pw_dir,
-    sizeof(pw_dir),
-#if USE_HOME_PATH
-    "%s/%s",
-    getenv("HOME"),
-#else
-    "%s",
-#endif
-    CONFIG_DIR
-  );
-
-  if (res < 0 || res >= sizeof(pw_dir))
-    return NULL;
-
-  DIR* dir = opendir(pw_dir);
-
-  if (dir) { // Directory exists
-    closedir(dir);
-
-    if (access(PASSWD, F_OK) == 0) { // Can't access passwd file
-      return NULL;
-    }
-  } else { // Can't access config directory
-    printf("%s: error: can't access %s directory\n"
-           "warning: defaulting to shadow file.\n",
-           program_name, program_name);
-    return NULL;
-  }
-
-  res = snprintf(
-    pw_file,
-    sizeof(pw_file),
-    "%s/%s",
-    pw_dir,
-    PASSWD
-  );
-
-  if (res < 0 || res >= sizeof(pw_file))
-    return NULL;
-
-  return read_file(pw_file);
-#endif
-}
-
 int main(int argc, char **argv) {
 #ifndef HAVE_BSD_AUTH
   const char *pws;
@@ -708,8 +691,6 @@ int main(int argc, char **argv) {
   } else if (argc != 1) {
     usage();
   }
-
-  g_pw = read_pw_file();
 
 #ifdef __linux__
   dontkillme();
