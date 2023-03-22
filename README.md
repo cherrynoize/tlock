@@ -54,6 +54,14 @@ creating a file and storing it in there.
     echo example_psw > passwd 
     chmod 600 passwd
 
+Since I couldn't bear having to write the same password
+when I had only one free hand and vice versa, you can
+add multiple newline separated passwords (one for each
+line) like so:
+
+    echo example_psw_2 >> passwd 
+    echo example_psw_3 >> passwd 
+
 You also have to set the CONFIG_DIR and PASSWD macros
 so they point to the correct file. These shown here
 are the default values, so you only need to uncomment
