@@ -7,7 +7,7 @@ options but then actually take it back towards a more
 simplicistic approach (more like original *slock*'s) but 
 with some added configuration capabilities.
 
-#### Translucent
+#### Transparent
 ##### With text
 ![tlock screenshot](https://i.imgur.com/goweCWJ.png "tlock with text message")
 ![tlock screenshot](https://i.imgur.com/kA6DdIQ.png "tlock with text message")
