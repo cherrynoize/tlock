@@ -8,6 +8,10 @@ simplicistic approach (more like original *slock*'s) but
 with some added configuration capabilities.
 
 #### Transparency
+##### With text
+![tlock screenshot](https://i.imgur.com/goweCWJ.png "tlock with text message")
+![tlock screenshot](https://i.imgur.com/kA6DdIQ.png "tlock with text message")
+##### Simple
 ![tlock screenshot](https://i.imgur.com/UCSM7VE.png "tlock with transparency option")
 ![tlock screenshot](https://i.imgur.com/o7CCIgq.png "tlock with transparency option")
 #### No transparency

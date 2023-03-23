@@ -97,8 +97,8 @@ error:
 }
 #endif
 
-// Disable ALT+SYSRQ and CTRL+ALT+Backspace
-// Prevents ALT+SYSRQ+k'ing our process.
+/* Disable ALT+SYSRQ and CTRL+ALT+Backspace
+ * Prevents ALT+SYSRQ+k'ing our process. */
 static void disable_kill(void) {
 #if POWEROFF
   // /usr/bin/tee /proc/sys/kernel/SYSRQ,/usr/bin/tee /proc/SYSRQ-trigger
@@ -116,7 +116,7 @@ static void disable_kill(void) {
 #endif
 }
 
-// Poweroff if in danger.
+/* Poweroff if in danger */
 static void poweroff(void) {
 #if POWEROFF
   // Needs sudo privileges - alter your /etc/sudoers file:
@@ -129,8 +129,8 @@ static void poweroff(void) {
 #endif
 }
 
-// Take a webcam shot of whoever is tampering with our
-// machine.
+/* Take a webcam shot of whoever is tampering with our
+ * machine. */
 static int webcam_shot(int async) {
 #if WEBCAM_SHOT
   char cmd[CMD_LENGTH];
@@ -183,19 +183,81 @@ static int play_beep(int async) {
 #endif
 }
 
-void set_tlock_background(
+/* Print text to screen. */
+static void write_message(Display *display, Window win, int screen) {
+  int len, line_len, width, height, i, j, k, tab_replace, tab_size;
+	XGCValues gr_values;
+	XFontStruct *fontinfo;
+	XColor color, dummy;
+	GC gc;
+	fontinfo = XLoadQueryFont(display, FONT_NAME);
+	tab_size = 8 * XTextWidth(fontinfo, " ", 1);
+
+	XAllocNamedColor(display,
+      DefaultColormap(display, screen),
+      FONT_COLOR, &color, &dummy);
+
+	gr_values.font = fontinfo->fid;
+	gr_values.foreground = color.pixel;
+	gc=XCreateGC(display,win,GCFont+GCForeground, &gr_values);
+
+	len = strlen(PRINT_MSG);
+
+	// Max line length
+	line_len = 0;
+	k = 0;
+	for (i = j = 0; i < len; i++) {
+		if (PRINT_MSG[i] == '\n') {
+			if (i - j > line_len)
+				line_len = i - j;
+			k++;
+			i++;
+			j = i;
+		}
+	}
+
+  // If there is only one line
+	if (line_len == 0)
+		line_len = len;
+
+	height = DisplayHeight(display, screen)*3/7 - (k*20)/3;
+	width  = (DisplayWidth(display, screen) - XTextWidth(fontinfo, PRINT_MSG, line_len))/2;
+
+	// Look for newlines and print text in between them.
+	for (i = j = k = 0; i <= len; i++) {
+		// i == len is a special case for last line
+		if (i == len || PRINT_MSG[i] == '\n') {
+			tab_replace = 0;
+			while (PRINT_MSG[j] == '\t' && j < i) {
+				tab_replace++;
+				j++;
+			}
+
+			XDrawString(display, win, gc, width + tab_size*tab_replace, height + 20*k, PRINT_MSG + j, i - j);
+			while (i < len && PRINT_MSG[i] == '\n') {
+				i++;
+				j = i;
+				k++;
+			}
+		}
+	}
+}
+
+/* Create lock screen window. */
+void create_lock_screen(
     Display *display, unsigned int color
     ) {
-      int screen;
+  int screen;
 
-      for (screen = 0; screen < nscreens; screen++) {
-        XSetWindowBackground(
-          display,
-          locks[screen]->win,
-          locks[screen]->colors[color]
+  for (screen = 0; screen < nscreens; screen++) {
+    XSetWindowBackground(
+        display,
+        locks[screen]->win,
+        locks[screen]->colors[color]
         );
-        XClearWindow(display, locks[screen]->win);
-      }
+    XClearWindow(display, locks[screen]->win);
+    write_message(display, locks[screen]->win, screen);
+  }
 }
 
 #ifndef HAVE_BSD_AUTH
@@ -480,9 +542,9 @@ readpw(Display *display, const char *pws)
 
 #if COLORS
     if (llen == 0 && len != 0) {
-      set_tlock_background(display, 1);
+      create_lock_screen(display, 1);
     } else if (llen != 0 && len == 0) {
-      set_tlock_background(display, 0);
+      create_lock_screen(display, 0);
     }
 
     llen = len;
@@ -602,7 +664,7 @@ static Lock *lockscreen(Display *display, int screen) {
   lock->colors[0] = color.pixel;
 #endif
 
-  // Cursor.
+  // Cursor
   Cursor locked_cursor = None;
 
 #if HIDE_CURSOR
@@ -668,11 +730,13 @@ static Lock *lockscreen(Display *display, int screen) {
   return lock;
 }
 
+/* Print usage and exit. */
 static void usage(void) {
   fprintf(stderr, "usage: %s [-v]\n", program_name);
   exit(0);
 }
 
+/* Lock screen until the correct password is entered. */
 int main(int argc, char **argv) {
 #ifndef HAVE_BSD_AUTH
   const char *pws;
@@ -726,7 +790,7 @@ int main(int argc, char **argv) {
       nlocks++;
   }
       
-  set_tlock_background(display, 0);
+  create_lock_screen(display, 0);
 
   XSync(display, False);
 
