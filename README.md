@@ -38,6 +38,13 @@ You can choose colors for the initial lock screen, as
 well as for the screen while typing, after a bad password
 attempt and for the cursor color.
 
+### Text
+
+You can add a custom text message through the PRINT_MSG
+value in `config.h`. FONT_COLOR is an #RRGGBB hex value
+and FONT_NAME is an [XLFD font name](https://www.x.org/releases/X11R7.6/doc/xorg-docs/specs/XLFD/xlfd.html)
+which sucks and you're never going to understand it fully. 
+
 ### Transparency
 
 You can optionally enable transparency on your lock 
