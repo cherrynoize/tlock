@@ -78,11 +78,11 @@ in *picom*:
     ];
 
 This will blur all backgrounds on translucent ARGB windows, expect
-for those in the exclude rule. The effect might improve
+for those in the exclude rule. This effect might improve
 readability and also appearance according to one's preference, but
-will generally have a minor impact on windows with high opacity
-values. tlock can be set to be fully transparent, meaning impact
-here will be considerable. 
+will generally have a minor impact on most windows since they tend
+to render with high opacity values. *tlock* can be set to be fully
+transparent, meaning impact here will be considerable. 
 
 ### Password
 
