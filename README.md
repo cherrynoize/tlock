@@ -9,15 +9,13 @@ with some added configuration capabilities.
 
 ## Screenshots
 
-#### Transparent
-##### With text
+### Blur
+![tlock screenshot](https://i.imgur.com/q69ovpS.png "tlock with kawase blur")
+### Text
 ![tlock screenshot](https://i.imgur.com/goweCWJ.png "tlock with text message")
-![tlock screenshot](https://i.imgur.com/kA6DdIQ.png "tlock with text message")
-##### Simple
-![tlock screenshot](https://i.imgur.com/UCSM7VE.png "tlock with transparency option")
+### Transparent
 ![tlock screenshot](https://i.imgur.com/o7CCIgq.png "tlock with transparency option")
-#### Opaque
-![tlock screenshot](https://i.imgur.com/E8uLMrO.png "tlock with no transparency")
+### Opaque
 ![tlock screenshot](https://i.imgur.com/kuvWYrH.png "tlock with no transparency")
 
 ## Configuration
