@@ -237,9 +237,9 @@ Verify it is working as expected with:
 
 ## Contacts
 
-> u/cherrynoize
-> 
-> 0xo1m0x5w@mozmail.com
+> [u/cherrynoize](https://www.reddit.com/user/cherrynoize)
+>
+> [0xo1m0x5w@mozmail.com](mailto:0xo1m0x5w@mozmail.com)
 
 Please feel free to contact me about any feedback or feature
 request. Or where possible, please do open a public issue. 
