@@ -241,8 +241,8 @@ Verify it is working as expected with:
 > 
 > 0xo1m0x5w@mozmail.com
 
-Please feel free to contact me about any feedback or
-request.
+Please feel free to contact me about any feedback or feature
+request. Or where possible, please do open a public issue. 
 
 ## Donations
 
