@@ -55,6 +55,35 @@ screen. In the config, just set TRANSPARENCY to 1.
 To hide the cursor instead just set the HIDE_CURSOR
 flag to 1.
 
+### Blur
+
+You can add background blur through your compositor. For instance
+in *picom*:
+
+    blur: {
+      method = "dual_kawase";
+      strength = 5;
+      background = true;
+      background-frame = true;
+      background-fixed = true;
+    }
+
+    # Exclude conditions for background blur.
+    # blur-background-exclude = []
+    blur-background-exclude = [
+      "window_type = 'dock'",
+      "window_type = 'desktop'",
+      "_GTK_FRAME_EXTENTS@:c",
+      "class_g = 'Dunst'"
+    ];
+
+This will blur all backgrounds on translucent ARGB windows, expect
+for those in the exclude rule. The effect might improve
+readability and also appearance according to one's preference, but
+will generally have a minor impact on windows with high opacity
+values. tlock can be set to be fully transparent, meaning impact
+here will be considerable. 
+
 ### Password
 
 You can choose to add a custom password by simply
