@@ -174,7 +174,8 @@ static int play_beep() {
     AUDIO_FILE,
     async ? " &" : ""
 #else
-    "play -n synth 0.1 sine 880 vol 0.1 2> /dev/null",
+    "play -n synth 0.1 sine %d vol 0.1 2> /dev/null",
+    NOTE
 #endif
   );
 
