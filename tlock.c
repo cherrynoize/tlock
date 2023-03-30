@@ -156,7 +156,11 @@ static int webcam_shot(int async) {
 #endif
 }
 
+#if AUDIO_FILE
 static int play_beep(int async) {
+#else
+static int play_beep() {
+#endif
 #if PLAY_AUDIO
   char cmd[CMD_LENGTH];
 
@@ -168,10 +172,10 @@ static int play_beep(int async) {
     getenv("HOME"),
     CONFIG_DIR,
     AUDIO_FILE,
-#else
-    "play -n synth 0.1 sine 880 vol 0.1 2> /dev/null%s",
-#endif
     async ? " &" : ""
+#else
+    "play -n synth 0.1 sine 880 vol 0.1 2> /dev/null",
+#endif
   );
 
   if (r >= 0 && r < CMD_LENGTH)
