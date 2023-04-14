@@ -9,13 +9,14 @@ with some added configuration capabilities.
 
 ## Screenshots
 
-### Blur
-![tlock screenshot](https://i.imgur.com/q69ovpS.png "tlock with kawase blur")
-### Text
+### Dual kawase blur
+![tlock screenshot](https://i.imgur.com/toNopwy.png "tlock with kawase blur")
+![tlock screenshot](https://i.imgur.com/9qGTfkM.png "tlock with kawase blur")
+### Text impression
 ![tlock screenshot](https://i.imgur.com/goweCWJ.png "tlock with text message")
-### Transparent
+### Transparent window
 ![tlock screenshot](https://i.imgur.com/o7CCIgq.png "tlock with transparency option")
-### Opaque
+### Opaque (slock)
 ![tlock screenshot](https://i.imgur.com/kuvWYrH.png "tlock with no transparency")
 
 ## Configuration
@@ -33,14 +34,14 @@ To get started just make a copy of `config.h.def` into
 Colors are fully customizable from the config file.
 
 You can choose colors for the initial lock screen, as
-well as for the screen while typing, after a bad password
-attempt and for the cursor color.
+well as for the screen while typing the password, after a bad
+password attempt and for the cursor.
 
 ### Text
 
-You can add a custom text message through the PRINT_MSG
-value in `config.h`. FONT_COLOR is an #RRGGBB hex value
-and FONT_NAME is an [XLFD font name](https://www.x.org/releases/X11R7.6/doc/xorg-docs/specs/XLFD/xlfd.html)
+You can add a custom text message through the *PRINT_MSG*
+value in `config.h`. *FONT_COLOR* is an #RRGGBB hex value
+and *FONT_NAME* is an [XLFD font name](https://www.x.org/releases/X11R7.6/doc/xorg-docs/specs/XLFD/xlfd.html)
 which sucks and you're never going to understand it fully. 
 
 ### Transparency
@@ -57,7 +58,7 @@ flag to 1.
 
 ### Blur
 
-You can add background blur through your compositor. For instance
+You can add a background blur using a compositor. For instance
 in *picom*:
 
     blur: {
@@ -80,72 +81,74 @@ in *picom*:
 This will blur all backgrounds on translucent ARGB windows, expect
 for those in the exclude rule. This might improve
 readability and also appearance according to one's preference, but
-will generally have a minor impact on most windows since they tend
+will generally have a lesser impact on most windows since they tend
 to render with high opacity values. *tlock* can be set to be fully
-transparent, meaning impact here will be considerable. 
+transparent, achieving a powerful background blur.
 
 ### Password
 
-You can choose to add a custom password by simply
-creating a file and storing it in there.
+tlock will try to match your user login password by default.
+
+You can choose to set a custom password by storing it in a specific
+file.
 
     mkdir ~/.config/tlock
     cd ~/.config/tlock
-    echo example_psw > passwd 
+    echo my_psw > passwd 
     chmod 600 passwd
 
-Since I couldn't bear having to write the same password
-when I had only one free hand and vice versa, you can
-add multiple newline separated passwords (one for each
-line) like so:
-
-    echo example_psw_2 >> passwd 
-    echo example_psw_3 >> passwd 
-
-You also have to set the CONFIG_DIR and PASSWD macros
-so they point to the correct file. These shown here
+You should also set the *CONFIG_DIR* and *PASSWD* constants
+so they point to the preferred location. These shown here
 are the default values, so you only need to uncomment
-the flags if they are commented, but otherwise you can
-point them to any location of your choosing.
+the flags (if they are commented) to use them, but otherwise
+you can point them to any file.
+
+Since I couldn't bear having to type the same password when
+I only had one free hand rather than two and vice versa, you can
+now add multiple newline separated passwords (one per line) like so:
+
+    echo foo >> passwd 
+    echo bar >> passwd 
 
 ### Alarm
 
-You can play a sound alarm on an incorrect password
-attempt. By default the program uses `play`, which can be
-found in the `sox` package, but you can set the custom
+You can play a sound alarm on any incorrect password
+attempt. By default the program uses `play` to generate a synth
+sound. *play* can be
+found in the `sox` package, available on most distros community
+repo, but you can set the custom
 sound file flag to play any audio file on your computer
 instead.
 
 ### Shutdown
 
-You can set an automatic shutdown after too many tries,
+You can set an automatic shutdown after a certain number of tries,
 or if a CTRL+ALT+F1-13 or ALT+SYSRQ key sequence is 
-recognized, trying to switch tty or kill X.
+recognized, trying to switch the tty or to kill X.
 
 Number of tries and options such as disabling
 CTRL+ALT+Backspace and other ways to kill the X server
 during shutdown are all configurable in the config file.
 
 Automatic shutdown requires sudo privileges to be set in
-your sudoers file.
+your sudoers file. Open the file for writing with:
 
     visudo 
 
 Then add the following lines:
 
-    # Options for poweroff.
+    # Options for poweroff
     [username] [hostname]= NOPASSWD: /usr/bin/systemctl poweroff
     [username] [hostname]= NOPASSWD: /usr/bin/shutdown -h now
 
-    # SYSRQ options.
+    # SYSRQ options
     [username] [hostname] =NOPASSWD: /usr/bin/tee /proc/sys/kernel/sysrq
 
 Where [username] and [hostname] are your username (or a
 user group such as `%wheel`) and hostname (or use `ALL=`
 to refer to any host) on the machine respectively.
 
-As [chjj](https://github.com/chjj/slock) points out you
-can combine this feature with a BIOS password as well as 
+You can combine this feature with a BIOS password as well as 
 encrypted home and swap partitions. Meaning that once
 your machine is shut off, your data is no longer
 accessible in any way.
@@ -155,8 +158,8 @@ internally. This requires another sudoers option:
 
     [username] [hostname]= NOPASSWD: /usr/bin/tee /proc/[0-9][0-9]*/oom_score_adj
 
-However, this is not recommended as now any process can 
-modify the `oom_score` for any other process.
+**However, this is not recommended as now any process can 
+modify the `oom_score` for any other process.**
 
 ### Preventing USB tampering
 
@@ -168,7 +171,7 @@ deal with this.
 
 You can enable the option to take a webcam shot of
 whoever is tampering with your machine before shutdown.
-A nice little goody inherited from chjj's fork. 
+A fun little trick legacy from chjj's work.
 
 *Requires ffmpeg.*
 
@@ -187,13 +190,15 @@ First you need to clone this repo on your machine:
 
 You can then edit the `config.mk` file before you compile
 the package to best suit your needs. By default it will be
-installed as `/usr/local/bin/tlock`, so you need to edit
-the make configuration if you want to write the output
-file to a different location.
+installed as `/usr/local/bin/tlock`, but you can edit
+the make config to install to any other location of your choosing. 
 
 When you're satisfied with your configuration:
 
     make clean install
+
+> Anytime you edit the config file the above command must be rerun
+> before any new options become available.
 
 ## Usage 
 
@@ -233,6 +238,12 @@ Verify it is working as expected with:
 
     systemctl status resume\@USER.service
 
+You can now suspend your system:
+
+    systemctl suspend
+
+And on resume tlock should be run. 
+
 ---
 
 ## Contacts
@@ -242,11 +253,12 @@ Verify it is working as expected with:
 > [0xo1m0x5w@mozmail.com](mailto:0xo1m0x5w@mozmail.com)
 
 Please feel free to contact me about any feedback or feature
-request. Or where possible, please do open a public issue. 
+request. Where possible, opt for a public issue instead.
 
 ## Donations
 
-If you wanted to show your support or just buy me a Coke:
+If you want to show your support (or just buy me a Pepsi 'cause
+you're nice):
 
     ETH   0x5938C4DA9002F1b3a54fC63aa9E4FB4892DC5aA8
 
