@@ -196,6 +196,7 @@ static void write_message(Display *display, Window win, int screen) {
 	XColor color, dummy;
 	GC gc;
 	fontinfo = XLoadQueryFont(display, FONT_NAME);
+	if (!fontinfo) return;
 	tab_size = 8 * XTextWidth(fontinfo, " ", 1);
 
 	XAllocNamedColor(display,
