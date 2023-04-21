@@ -302,7 +302,7 @@ static const char *gethash(void) {
   }
 #endif
 
-  // Drop privileges.
+  // Drop privileges
   if (geteuid() == 0) {
     if (!(getegid() != pw->pw_gid && 
           setgid(pw->pw_gid) < 0)) {

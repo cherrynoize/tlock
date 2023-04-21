@@ -12,3 +12,7 @@ Allow moving volume at least down
 ## Window destroy animation
 
 Possibly add like a fade when correcy psw is provided and we destroy the tlock window
+
+## DPMS
+
+In-built monitor timeout settings
