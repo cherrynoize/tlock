@@ -16,7 +16,7 @@ with some added configuration capabilities.
 ![tlock screenshot](https://i.imgur.com/goweCWJ.png "tlock with text message")
 ### Transparent window
 ![tlock screenshot](https://i.imgur.com/o7CCIgq.png "tlock with transparency option")
-### Opaque (slock)
+### Opaque
 ![tlock screenshot](https://i.imgur.com/kuvWYrH.png "tlock with no transparency")
 
 ## Configuration
