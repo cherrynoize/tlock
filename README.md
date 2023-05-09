@@ -197,8 +197,11 @@ When you're satisfied with your configuration:
 
     make clean install
 
-> Anytime you edit the config file the above command must be rerun
-> before any new options become available.
+Anytime you edit the config file the above command must be rerun
+before any new options become available.
+
+> Please see [Additional configuration](#additional-configuration)
+> below for more details.
 
 ## Usage 
 
@@ -219,24 +222,21 @@ already have one:
 
     [Service]
     User=%I
-    Type=forking
     Environment=DISPLAY=:0
     ExecStart=/usr/local/bin/tlock
 
     [Install]
     WantedBy=suspend.target
 
-Then enable or start the service for your user like this:
+Then enable and start the service for your user like this:
 
-    systemctl enable resume\@USER.service
-    # or
-    systemctl start resume\@USER.service
+    systemctl enable --now resume@USER.service
 
 Where USER is your username.
 
 Verify it is working as expected with:
 
-    systemctl status resume\@USER.service
+    systemctl status resume@USER.service
 
 You can now suspend your system:
 
@@ -244,13 +244,64 @@ You can now suspend your system:
 
 And on resume tlock should be run. 
 
+## Additional configuration
+
+### DPMS settings
+
+We chose to follow original slock on removing DPMS settings, so
+you can easily customize them separately.
+
+Here's an example script that you could run instead of tlock from
+your systemd service:
+
+    #!/bin/sh
+    # Stop music or ignore if not playing
+    /usr/bin/playerctl pause || true
+    # Close all notifications
+    /usr/bin/dunstctl close-all
+    # Disable dpms
+    /usr/bin/xset -dpms &
+    # Run tlock
+    /usr/local/bin/tlock
+    # Re-enable dpms
+    /usr/bin/xset +dpms
+
+Of course this is all optional configuration but leaving DPMS
+unhandled may constitute a security issue, for instance unlocking the
+screen automatically after a certain timeout.
+
+## Troubleshooting
+
+### Screen flashing before locking
+
+This is most likely not tlock's fault but the resume service's.
+
+You can easily circumvent this by using the suspend service instead:
+
+    [Unit]
+    Description=User before suspend actions
+    Before=sleep.target
+
+    [Service]
+    User=%I
+    Environment=DISPLAY=:0
+    ExecStart=/usr/local/bin/tlock
+
+    [Install]
+    WantedBy=sleep.target
+
+Enable as for the resume service.
+
+It may be briefly flashing the locked screen before suspending but
+I believe that's better than the other way around.
+
 ---
 
 ## Contacts
 
 > [u/cherrynoize](https://www.reddit.com/user/cherrynoize)
 >
-> [0xo1m0x5w@mozmail.com](mailto:0xo1m0x5w@mozmail.com)
+> [cherrynoize@duck.com](mailto:cherrynoize@duck.com)
 
 Please feel free to contact me about any feedback or feature
 request. Where possible, opt for a public issue instead.
