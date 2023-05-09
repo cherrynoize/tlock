@@ -212,6 +212,8 @@ if you have any. Et voilà.
 
 ### Auto-enable after suspend
 
+> See [Troubleshooting](#troubleshooting) for issues with resume.
+
 Create a new `resume@.service` file in
 `/etc/systemd/system` or edit with care it if you
 already have one:
