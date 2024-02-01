@@ -299,26 +299,8 @@ I believe that's better than the other way around.
 
 ---
 
-## Contacts
+## Contribute
 
-> [u/cherrynoize](https://www.reddit.com/user/cherrynoize)
->
-> [cherrynoize@duck.com](mailto:cherrynoize@duck.com)
-
-Please feel free to contact me about any feedback or feature
-request. Where possible, opt for a public issue instead.
-
-## Donations
-
-If you want to show your support (or just buy me a Pepsi 'cause
-you're nice):
-
-    ETH   0x5938C4DA9002F1b3a54fC63aa9E4FB4892DC5aA8
-
-    SOL   G77bErQLYatQgMEXHYUqNCxFdUgKuBd8xsAuHjeqvavv
-
-    BNB   0x0E0eAd7414cFF412f89BcD8a1a2043518fE58f82
-
-    LUNC  terra1n5sm6twsc26kjyxz7f6t53c9pdaz7eu6zlsdcy
+Please open an issue or a PR about any issue or whatever.
 
 ### Thank you for using tlock.
